@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { StyleSheet, ImageBackground, Text, TextInput, Alert, TouchableOpacity, Button, View } from 'react-native';
+import { StyleSheet, ImageBackground, Text, TextInput, Alert, TouchableOpacity, Button, View, Platform } from 'react-native';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 const color1 = '#090C08';
 const color2 = '#474056';
@@ -29,6 +30,7 @@ export default class Start extends React.PureComponent {
       onChangeText={(name) => this.setState({ name })}
       value={this.state.name}
       placeholder='  Your Name'
+      {...Platform.OS === 'android' ? <KeyboardSpacer /> : null}
      />
      <Text style={styles.text}>
       Choose Background Colour:
