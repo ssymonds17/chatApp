@@ -3,6 +3,9 @@ import NetInfo from '@react-native-community/netinfo';
 import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
 import { StyleSheet, View, Platform, AsyncStorage } from 'react-native';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+
+import CustomActions from './CustomActions';
 const firebase = require('firebase');
 require('firebase/firestore');
 
@@ -17,6 +20,8 @@ export default class Chat extends React.PureComponent {
       messages: [],
       uid: 0,
       // isConnected: false,
+      image: null,
+      location: null,
     };
 
 
@@ -88,6 +93,8 @@ export default class Chat extends React.PureComponent {
         text: data.text,
         createdAt: data.createdAt.toDate(),
         user: data.user,
+        image: data.image || '',
+        location: data.location || null,
       });
     });
     this.setState({
@@ -108,6 +115,8 @@ export default class Chat extends React.PureComponent {
         name: this.props.route.params.name,
         avatar: '',
       },
+      image: message.image || '',
+      location: message.location || null,
     });
   };
 
@@ -179,6 +188,36 @@ export default class Chat extends React.PureComponent {
     }
   }
 
+  renderCustomActions = (props) => {
+    return <CustomActions {...props} />;
+  }
+
+  renderCustomView(props) {
+    const { currentMessage } = props;
+    if (currentMessage.location) {
+      return (
+        <View>
+          <MapView
+            style={{
+              width: 150,
+              height: 100,
+              borderRadius: 13,
+              margin: 3
+            }}
+            provider={PROVIDER_GOOGLE}
+            region={{
+              latitude: currentMessage.location.latitude,
+              longitude: currentMessage.location.longitude,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+            }}
+          />
+        </View>
+      );
+    }
+    return null;
+  }
+
   render() {
     let name = this.props.route.params.name;
     this.props.navigation.setOptions({ title: name });
@@ -188,6 +227,8 @@ export default class Chat extends React.PureComponent {
         <GiftedChat
           renderBubble={this.renderBubble.bind(this)}
           renderInputToolbar={this.renderInputToolbar.bind(this)}
+          renderActions={this.renderCustomActions.bind(this)}
+          renderCustomView={this.renderCustomView.bind(this)}
           messages={this.state.messages}
           onSend={messages => this.onSend(messages)}
           user={{ _id: this.state.uid }}
