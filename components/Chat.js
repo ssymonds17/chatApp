@@ -87,7 +87,7 @@ export default class Chat extends React.PureComponent {
     // go through each document
     querySnapshot.forEach((doc) => {
       // get the queried document snapshot data
-      var data = doc.data();
+      let data = doc.data();
       messages.push({
         _id: data._id,
         text: data.text,
@@ -121,7 +121,7 @@ export default class Chat extends React.PureComponent {
   };
 
   // loads the messages saved to async storage
-  async getMessages() {
+  getMessages = async () => {
     let messages = '';
     try {
       messages = await AsyncStorage.getItem('messages') || [];
@@ -134,7 +134,7 @@ export default class Chat extends React.PureComponent {
   };
 
   // saves messages to async storage
-  async saveMessages() {
+  saveMessages = async () => {
     try {
       await AsyncStorage.setItem('messages', JSON.stringify(this.state.messages));
     } catch (error) {
@@ -143,7 +143,7 @@ export default class Chat extends React.PureComponent {
   }
 
   // deletes messages from async storage
-  async deleteMessages() {
+  deleteMessages = async () => {
     try {
       await AsyncStorage.removeItem('messages');
     } catch (error) {

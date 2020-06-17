@@ -43,35 +43,39 @@ export default class CustomActions extends React.Component {
 
  // pick an image from device's image library
  pickImage = async () => {
-  const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+  try {
+   const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+   if (status === 'granted') {
+    let result = await ImagePicker.launchImageLibraryAsync({
+     mediaTypes: 'Images',
+    }).catch(error => console.log(error));
 
-  if (status === 'granted') {
-   let result = await ImagePicker.launchImageLibraryAsync({
-    mediaTypes: 'Images',
-   }).catch(error => console.log(error));
-
-   if (!result.cancelled) {
-    const imageUrlLink = await this.uploadImage(result.uri);
-    this.props.onSend({ image: imageUrlLink })
-     .catch(error => console.log(error));
+    if (!result.cancelled) {
+     const imageUrlLink = await this.uploadImage(result.uri);
+     this.props.onSend({ image: imageUrlLink });
+    }
    }
+  } catch (error) {
+   console.log(error.message);
   }
  }
 
  // take a photo using the device's camera
  takePhoto = async () => {
-  const { status } = await Permissions.askAsync(Permissions.CAMERA, Permissions.CAMERA_ROLL);
+  try {
+   const { status } = await Permissions.askAsync(Permissions.CAMERA, Permissions.CAMERA_ROLL);
+   if (status === 'granted') {
+    let result = await ImagePicker.launchCameraAsync({
+     mediaTypes: 'Images',
+    }).catch(error => console.log(error));
 
-  if (status === 'granted') {
-   let result = await ImagePicker.launchCameraAsync({
-    mediaTypes: 'Images',
-   }).catch(error => console.log(error));
-
-   if (!result.cancelled) {
-    const imageUrlLink = await this.uploadImage(result.uri);
-    this.props.onSend({ image: imageUrlLink })
-     .catch(error => console.log(error));
+    if (!result.cancelled) {
+     const imageUrlLink = await this.uploadImage(result.uri);
+     this.props.onSend({ image: imageUrlLink });
+    }
    }
+  } catch (error) {
+   console.log(error.message);
   }
  }
 
@@ -106,10 +110,9 @@ export default class CustomActions extends React.Component {
 
 
  getLocation = async () => {
-  const { status } = await Permissions.askAsync(Permissions.LOCATION);
-
-  if (status === 'granted') {
-   try {
+  try {
+   const { status } = await Permissions.askAsync(Permissions.LOCATION);
+   if (status === 'granted') {
     const result = await Location.getCurrentPositionAsync({});
     if (result) {
      this.props.onSend({
@@ -119,9 +122,9 @@ export default class CustomActions extends React.Component {
       },
      });
     }
-   } catch (error) {
-    console.log(error);
    }
+  } catch (error) {
+   console.log(error);
   }
  }
 
