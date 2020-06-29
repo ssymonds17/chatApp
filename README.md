@@ -64,7 +64,11 @@ To create a Firebase account follow these steps:
 12. Click on the Settings icon and choose 'Project Settings'. Add your application and name it. 
 13. Scroll down to 'Firebase SDK Snippet', select the 'Config' radio button and copy all the code within the firebaseConfig variable into your Chat.js file.
 
+[Kanban Board]
+
    [android studio emulator page]: <https://docs.expo.io/workflow/android-studio-emulator/>
    
    [firebase website]: <https://firebase.google.com/?hl=en>
+   
+   [kanban board]: <https://trello.com/b/rziCSnt0/achievement-5>
    
